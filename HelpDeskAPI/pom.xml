@@ -1,0 +1,281 @@
+
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.vizuru</groupId>
+    <artifactId>HelpDeskAPI</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
+    <modules>
+        <module>helpdeskapi-server</module>
+        <module>helpdeskapi-rest</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+                <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>helpdeskapi-rest</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+            <dependency>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-http</artifactId>
+                       <version>11.0.7</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.annotation</groupId>
+                <artifactId>jakarta.annotation-api</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+            <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+            <dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-server</artifactId>
+    <version>11.0.7</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-annotations</artifactId>
+    <version>11.0.7</version>
+</dependency>
+<dependency>
+    <groupId>com.typesafe</groupId>
+    <artifactId>config</artifactId>
+    <version>1.4.1</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-servlet</artifactId>
+    <version>11.0.7</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-webapp</artifactId>
+    <version>11.0.7</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-util</artifactId>
+    <version>11.0.7</version>
+</dependency>
+<dependency>
+    <groupId>org.eclipse.jetty</groupId>
+    <artifactId>jetty-bom</artifactId>
+    <version>11.0.7</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.glassfish.jersey</groupId>
+    <artifactId>jersey-bom</artifactId>
+    <version>4.0.0-M1</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.glassfish.jersey.inject</groupId>
+    <artifactId>jersey-hk2</artifactId>
+    <version>4.0.0-M1</version>
+</dependency>
+
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>2.0.16</version>
+</dependency>
+ 
+<dependency>
+    <groupId>org.glassfish.hk2</groupId>
+    <artifactId>hk2-api</artifactId>
+    <version>4.0.0-M1</version>
+</dependency>
+
+<dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.5.12</version>
+</dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.4.0</version>
+                </plugin>
+                 <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.3.1</version>
+                 </plugin>
+<plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                                <failOnWarning>true</failOnWarning>
+                                <verbose>true</verbose>
+                                <ignoredUnusedDeclaredDependencies>
+                                    <ignoredUnusedDeclaredDependecy>ch.qos.logback:logback-clasic</ignoredUnusedDeclaredDependecy>
+                                    <ignoredUnusedDeclaredDependecy>jakarta.annotation:jakarta.annotation-api</ignoredUnusedDeclaredDependecy>
+                                    <ignoredUnusedDeclaredDependecy>org.eclipse.jetty:jetty-annotations</ignoredUnusedDeclaredDependecy>
+                                    <ignoredUnusedDeclaredDependecy>org.glassfish.jersey.inject:jersey-hk2</ignoredUnusedDeclaredDependecy>
+                                </ignoredUnusedDeclaredDependencies>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>analyze-only</id>
+                                <goals>
+                                    <goal>analyze-only</goal>
+                                    <goal>validate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        
+                </plugin>
+                 <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.13.0</version>
+                        <configuration>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
+                            <compilerArgs>
+                                <arg>-Werror</arg>
+                                <arg>-Xlint:all</arg>
+                            </compilerArgs>
+                            <failOnError>true</failOnError>
+                            <failOnWarning>true</failOnWarning>
+                            <showDeprecation>true</showDeprecation>
+                        </configuration>
+                </plugin>
+                 <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven-plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <rules>
+                            <dependencyCibvergence/>
+                            <reactorModuleConvergence/>
+                            <requireSameVersions>
+                                <dependencies>
+                                    <dependency>${project.groupId}</dependency>
+                                </dependencies>
+                            </requireSameVersions>
+                        </rules>
+                    </configuration>
+                </plugin>
+                 <plugin>
+                         <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>3.5.1</version>
+                         <executions>
+                            <execution>
+                                <id>run-integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                 </plugin>
+                 <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.4.2</version>
+                </plugin>
+                  <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>3.1.3</version>
+                </plugin>
+<plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>3.6.0</version>
+                </plugin>
+<plugin>
+ <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-pmd-plugin</artifactId>
+    <version>3.26.0 </version>
+    <configuration>
+        <verbose>true</verbose>
+    </configuration>
+    <executions>
+        <execution>
+            <id>pmd-check</id>
+            <goals>
+                <goal>check</goal>
+            </goals>
+            <phase>validate</phase>
+        </execution>
+    </executions>
+    </plugin>
+                  
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>   
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+            </plugin>   
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>
