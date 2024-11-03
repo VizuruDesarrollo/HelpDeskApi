@@ -1,18 +1,10 @@
 package com.helpdeskapi.server;
 
 import com.helpdeskapi.rest.ApiApplication;
-import java.io.File;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-
-import java.util.Optional;
+import java.net.URL;
+import static java.util.Optional.ofNullable;
 //import static java.util.Optional.ofNullable;
 import static org.eclipse.jetty.http.HttpScheme.HTTPS;
 import static org.eclipse.jetty.http.HttpVersion.HTTP_1_1;
@@ -35,16 +27,11 @@ import org.slf4j.LoggerFactory;
 public class Helpdeskserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(Helpdeskserver.class);
     public static void main(String... args) throws Exception {
-    int port = Optional.ofNullable(System.getProperty("port")).map(Integer::parseInt).orElse(8443);
-   //String mode = ofNullable(System.getProperty("mode")).orElse("dev");
-   ClassLoader classLoader =Helpdeskserver.class.getClassLoader();
-    URI uri = classLoader.getResource("../../../../../../../../system-dev.properties").toURI();
-                Path raizModulo = Paths.get(uri).getParent();
-        Path rutaArchivo = raizModulo.resolve("subdirectorio/nuevoArchivo.properties");
-                Files.createFile(rutaArchivo);
-                String s = rutaArchivo.toAbsolutePath().toString();
-File archivo = new File(s);
-    Config    config = ConfigFactory.parseFile(archivo);
+    int port = ofNullable(System.getProperty("port")).map(Integer::parseInt).orElse(8443);
+  String mode = ofNullable(System.getProperty("mode")).orElse("dev");
+  String url=String.format("https://raw.githubusercontent.com/VizuruDesarrollo/HelpDeskApi/refs/heads/main/HelpDeskAPI/system-dev.properties",mode);
+  
+      Config    config = ConfigFactory.parseURL(new URL(url));
    String keystore = config.getString("server.keystore.file");
            HttpConfiguration httpsConfiguration = new HttpConfiguration();
            httpsConfiguration.setSecureScheme(HTTPS.asString());
