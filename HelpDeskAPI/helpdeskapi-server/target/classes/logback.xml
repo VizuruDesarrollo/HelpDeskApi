@@ -12,5 +12,6 @@
     <appender-ref ref="STDOUT" />
   </root>
   <logger name="com.HelpDeskAPI" level="INFO"/>
+  <logger name="org.eclipse.jetty" level="WARN"></logger>
 </configuration>
 
