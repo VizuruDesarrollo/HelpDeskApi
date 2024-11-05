@@ -1,18 +1,10 @@
 package com.helpdeskapi.server;
 
 import com.helpdeskapi.rest.ApiApplication;
-import java.io.File;
-
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-
-import java.util.Optional;
+import java.net.URL;
+import static java.util.Optional.ofNullable;
 //import static java.util.Optional.ofNullable;
 import static org.eclipse.jetty.http.HttpScheme.HTTPS;
 import static org.eclipse.jetty.http.HttpVersion.HTTP_1_1;
@@ -31,22 +23,21 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_FILE;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_PASSWORD;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_TYPE;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_WEB_CONTENT;
+import static com.helpdeskapi.server.config.SystemKey.MODE;
+import static com.helpdeskapi.server.config.SystemKey.PORT;
+import java.io.IOException;
+@SuppressWarnings("PMD.TooManyStaticImports") 
 public class Helpdeskserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(Helpdeskserver.class);
-    public static void main(String... args) throws Exception {
-    int port = Optional.ofNullable(System.getProperty("port")).map(Integer::parseInt).orElse(8443);
-   //String mode = ofNullable(System.getProperty("mode")).orElse("dev");
-   ClassLoader classLoader =Helpdeskserver.class.getClassLoader();
-    URI uri = classLoader.getResource("../../../../../../../../system-dev.properties").toURI();
-                Path raizModulo = Paths.get(uri).getParent();
-        Path rutaArchivo = raizModulo.resolve("subdirectorio/nuevoArchivo.properties");
-                Files.createFile(rutaArchivo);
-                String s = rutaArchivo.toAbsolutePath().toString();
-File archivo = new File(s);
-    Config    config = ConfigFactory.parseFile(archivo);
-   String keystore = config.getString("server.keystore.file");
-           HttpConfiguration httpsConfiguration = new HttpConfiguration();
+    private static final String ROOT_CONTEXT="/";
+    private static final String API_PATTERN="/api/*";
+    private static final String APPLICATION_KEY="jakarta.ws.rs.Application";
+    private static Server createJettyServer(int port, Config config) throws IOException{
+    HttpConfiguration httpsConfiguration = new HttpConfiguration();
            httpsConfiguration.setSecureScheme(HTTPS.asString());
            httpsConfiguration.setSecurePort(port);
            SecureRequestCustomizer customizer = new SecureRequestCustomizer();
@@ -55,25 +46,33 @@ File archivo = new File(s);
            httpsConfiguration.addCustomizer(customizer);
            HttpConnectionFactory httpsConnectionFactory= new HttpConnectionFactory(httpsConfiguration);
            SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-           sslContextFactory.setKeyStorePath(keystore);
-           sslContextFactory.setKeyStoreType("PKCS12"); 
-           sslContextFactory.setKeyStorePassword("Vizuru");
-           sslContextFactory.setKeyManagerPassword("Vizuru");
+           sslContextFactory.setKeyStorePath(config.getString(SERVER_KEYSTORE_FILE.getKey()));
+           sslContextFactory.setKeyStoreType(config.getString(SERVER_KEYSTORE_TYPE.getKey())); 
+           sslContextFactory.setKeyStorePassword(config.getString(SERVER_KEYSTORE_PASSWORD.getKey()));
+           sslContextFactory.setKeyManagerPassword(config.getString(SERVER_KEYSTORE_PASSWORD.getKey()));
           sslContextFactory.setTrustAll(true);
           
           SslConnectionFactory sslConnectionFactory = new SslConnectionFactory(sslContextFactory,HTTP_1_1.asString());
           Server server = new Server();
           ServerConnector  httpsConnector = new ServerConnector(server, sslConnectionFactory,httpsConnectionFactory);
-          httpsConnector.setName("secure");
           httpsConnector.setPort(httpsConfiguration.getSecurePort());
           server.addConnector(httpsConnector);
           ServletContextHandler servletContextHandler = new ServletContextHandler(NO_SESSIONS);
-          servletContextHandler.setContextPath("/");
-          servletContextHandler.setBaseResource(Resource.newResource("src/main/resources/www"));
-          servletContextHandler.addServlet(DefaultServlet.class, "/");
+          servletContextHandler.setContextPath(ROOT_CONTEXT);
+          servletContextHandler.setBaseResource(Resource.newResource(config.getString(SERVER_WEB_CONTENT.getKey())));
+          servletContextHandler.addServlet(DefaultServlet.class, ROOT_CONTEXT);
           server.setHandler(servletContextHandler);
-          ServletHolder apiServletHolder = servletContextHandler.addServlet(ServletContainer.class,"/api/*");
-          apiServletHolder.setInitParameter("jakarta.ws.rs.Application",ApiApplication.class.getName());
+          ServletHolder apiServletHolder = servletContextHandler.addServlet(ServletContainer.class, API_PATTERN);
+          apiServletHolder.setInitParameter(APPLICATION_KEY,ApiApplication.class.getName());
+          return server;
+    }
+    public static void main(String... args) throws Exception {
+    int port = Integer.parseInt(ofNullable(System.getProperty(PORT.getKey())).orElse(PORT.defaultValue()));
+  String mode = ofNullable(System.getProperty(MODE.getKey())).orElse(MODE.defaultValue());
+  String url=String.format("https://raw.githubusercontent.com/VizuruDesarrollo/HelpDeskApi/refs/heads/main/HelpDeskAPI/system-dev.properties",mode);
+  
+      Config    config = ConfigFactory.parseURL(new URL(url));
+           Server server =createJettyServer(port,config);
           LOGGER.info("Iniciando servidor en el puerto {}", port);
           server.start();
           server.join();
