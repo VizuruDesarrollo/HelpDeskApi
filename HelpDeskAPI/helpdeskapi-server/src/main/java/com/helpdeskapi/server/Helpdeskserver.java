@@ -23,13 +23,10 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_FILE;
-import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_PASSWORD;
-import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_TYPE;
-import static com.helpdeskapi.server.config.ConfigKey.SERVER_WEB_CONTENT;
-import static com.helpdeskapi.server.config.SystemKey.MODE;
-import static com.helpdeskapi.server.config.SystemKey.PORT;
+import static com.helpdeskapi.server.config.ConfigKey.*;
+import static com.helpdeskapi.server.config.SystemKey.*;
 import java.io.IOException;
+
 @SuppressWarnings("PMD.TooManyStaticImports") 
 public class Helpdeskserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(Helpdeskserver.class);
@@ -67,8 +64,8 @@ public class Helpdeskserver {
           return server;
     }
     public static void main(String... args) throws Exception {
-    int port = Integer.parseInt(ofNullable(System.getProperty(PORT.getKey())).orElse(PORT.defaultValue()));
-  String mode = ofNullable(System.getProperty(MODE.getKey())).orElse(MODE.defaultValue());
+    int port = Integer.parseInt(ofNullable(System.getProperty(PORT.getKey())).orElse(PORT.getdefaultValue()));
+  String mode = ofNullable(System.getProperty(MODE.getKey())).orElse(MODE.getdefaultValue());
   String url=String.format("https://raw.githubusercontent.com/VizuruDesarrollo/HelpDeskApi/refs/heads/main/HelpDeskAPI/system-dev.properties",mode);
   
       Config    config = ConfigFactory.parseURL(new URL(url));
