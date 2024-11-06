@@ -1,3 +1,4 @@
 com\helpdeskapi\server\Helpdeskserver.class
+com\helpdeskapi\server\config\Key.class
 com\helpdeskapi\server\config\SystemKey.class
 com\helpdeskapi\server\config\ConfigKey.class
