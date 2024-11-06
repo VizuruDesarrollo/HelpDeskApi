@@ -4,22 +4,16 @@
  */
 package com.helpdeskapi.server.config;
 
-
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Administrador
  */
-public enum SystemKey implements Key {
-    PORT("8443"),
-    MODE("dev");
-    
-    private final String defaultValue;
-    SystemKey(String defaultValue){
-    this.defaultValue=defaultValue;
+public class ConfigKeyTest {
+    @Test
+    public void testGetKey(){
+                    Assertions.assertEquals("server.keystore.file", ConfigKey.SERVER_KEYSTORE_FILE.getKey());
     }
-    public String getdefaultValue(){
-    return defaultValue;
-    }
-  
 }
