@@ -1,3 +1,4 @@
-com\helpdeskapi\rest\ApiApplication$1.class
+com\helpdeskapi\rest\security\AccessLogFilter.class
 com\helpdeskapi\rest\ApiApplication.class
+com\helpdeskapi\rest\ApiApplication$1.class
 com\helpdeskapi\rest\resource\TestResource.class
