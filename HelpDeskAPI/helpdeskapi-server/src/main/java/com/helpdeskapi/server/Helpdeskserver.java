@@ -3,6 +3,9 @@ package com.helpdeskapi.server;
 import com.helpdeskapi.rest.ApiApplication;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+
+
+
 import java.net.URL;
 import static java.util.Optional.ofNullable;
 //import static java.util.Optional.ofNullable;
@@ -21,18 +24,22 @@ import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.glassfish.jersey.servlet.ServletProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.helpdeskapi.server.config.ConfigKey.*;
-import static com.helpdeskapi.server.config.SystemKey.*;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_FILE;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_PASSWORD;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_KEYSTORE_TYPE;
+import static com.helpdeskapi.server.config.ConfigKey.SERVER_WEB_CONTENT;
+import static com.helpdeskapi.server.config.SystemKey.MODE;
+import static com.helpdeskapi.server.config.SystemKey.PORT;
 import java.io.IOException;
-
 @SuppressWarnings("PMD.TooManyStaticImports") 
 public class Helpdeskserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(Helpdeskserver.class);
     private static final String ROOT_CONTEXT="/";
     private static final String API_PATTERN="/api/*";
-    private static final String APPLICATION_KEY="jakarta.ws.rs.Application";
+    
     private static Server createJettyServer(int port, Config config) throws IOException{
     HttpConfiguration httpsConfiguration = new HttpConfiguration();
            httpsConfiguration.setSecureScheme(HTTPS.asString());
@@ -60,12 +67,12 @@ public class Helpdeskserver {
           servletContextHandler.addServlet(DefaultServlet.class, ROOT_CONTEXT);
           server.setHandler(servletContextHandler);
           ServletHolder apiServletHolder = servletContextHandler.addServlet(ServletContainer.class, API_PATTERN);
-          apiServletHolder.setInitParameter(APPLICATION_KEY,ApiApplication.class.getName());
+          apiServletHolder.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS,ApiApplication.class.getName());
           return server;
     }
     public static void main(String... args) throws Exception {
-    int port = Integer.parseInt(ofNullable(System.getProperty(PORT.getKey())).orElse(PORT.getdefaultValue()));
-  String mode = ofNullable(System.getProperty(MODE.getKey())).orElse(MODE.getdefaultValue());
+    int port = Integer.parseInt(ofNullable(System.getProperty(PORT.getKey())).orElse(PORT.defaultValue()));
+  String mode = ofNullable(System.getProperty(MODE.getKey())).orElse(MODE.defaultValue());
   String url=String.format("https://raw.githubusercontent.com/VizuruDesarrollo/HelpDeskApi/refs/heads/main/HelpDeskAPI/system-dev.properties",mode);
   
       Config    config = ConfigFactory.parseURL(new URL(url));

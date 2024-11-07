@@ -83,16 +83,16 @@
 </dependency>
 
 <dependency>
-    <groupId>org.glassfish.jaxb</groupId>
-    <artifactId>jaxb-runtime</artifactId>
-    <version>4.0.5</version>
-</dependency>
-
-
-<dependency>
     <groupId>org.glassfish.jersey.inject</groupId>
     <artifactId>jersey-hk2</artifactId>
     <version>4.0.0-M1</version>
+</dependency>
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.8.1</version>
+    <scope>test</scope>
 </dependency>
 
 <dependency>
@@ -105,13 +105,6 @@
     <groupId>org.glassfish.hk2</groupId>
     <artifactId>hk2-api</artifactId>
     <version>4.0.0-M1</version>
-</dependency>
-
-<dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <version>5.11.3</version>
-    <scope>test</scope>
 </dependency>
 
 <dependency>
@@ -137,7 +130,7 @@
 <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.8.0</version>
+                        <version>3.8.1</version>
                         <configuration>
                                 <failOnWarning>true</failOnWarning>
                                 <verbose>true</verbose>
@@ -229,7 +222,15 @@
  <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-pmd-plugin</artifactId>
     <version>3.26.0 </version>
+    <dependencies>
+    <dependency>
+    <groupId>org.ow2.asm</groupId>
+    <artifactId>asm</artifactId>
+    <version>9.2</version>
+</dependency>
+    </dependencies>
     <configuration>
+    <linkXRef>false</linkXRef>
         <verbose>true</verbose>
     </configuration>
     <executions>
@@ -249,6 +250,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
+            </plugin>
+     
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -4,13 +4,13 @@
  */
 package com.helpdeskapi.server.config;
 
-
+import java.util.Locale;
 
 /**
  *
  * @author Administrador
  */
-public enum SystemKey implements Key {
+public enum SystemKey {
     PORT("8443"),
     MODE("dev");
     
@@ -18,8 +18,10 @@ public enum SystemKey implements Key {
     SystemKey(String defaultValue){
     this.defaultValue=defaultValue;
     }
-    public String getdefaultValue(){
+    public String defaultValue(){
     return defaultValue;
     }
-  
+    public String getKey(){
+    return name().toLowerCase(Locale.ENGLISH).replaceAll("_", ".");
+    }
 }
