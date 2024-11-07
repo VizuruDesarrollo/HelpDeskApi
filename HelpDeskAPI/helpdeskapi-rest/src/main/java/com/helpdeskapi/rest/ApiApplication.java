@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 public class ApiApplication extends ResourceConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiApplication.class);
     public ApiApplication (){
-    packages("com.helpdeskapi.rest");
     packages(ApiApplication.class.getPackageName());
     register(new AbstractBinder(){
         @Override
