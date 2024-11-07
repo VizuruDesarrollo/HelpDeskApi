@@ -3,9 +3,6 @@ package com.helpdeskapi.server;
 import com.helpdeskapi.rest.ApiApplication;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-
-
-
 import java.net.URL;
 import static java.util.Optional.ofNullable;
 //import static java.util.Optional.ofNullable;
