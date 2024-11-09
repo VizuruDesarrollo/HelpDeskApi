@@ -1,1 +1,3 @@
 com\helpdeskapi\rest\resource\TestResourceTest.class
+com\helpdeskapi\rest\security\AccessLogFilter.class
+com\helpdeskapi\rest\security\CorsFilter.class
